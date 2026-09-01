@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ButlerDroid.Pages.TaskEditPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="编辑提醒"
+    BackgroundColor="#F6F7F9">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="12">
+            <Label Text="标题" FontAttributes="Bold" />
+            <Entry x:Name="TitleEntry" Placeholder="例如：记得吃饭" />
+
+            <Label Text="正文" FontAttributes="Bold" />
+            <Editor x:Name="BodyEditor" HeightRequest="100" Placeholder="通知正文，可留空" />
+
+            <Label Text="调度类型" FontAttributes="Bold" />
+            <Picker
+                x:Name="KindPicker"
+                Title="选择调度类型"
+                SelectedIndexChanged="OnKindChanged" />
+
+            <VerticalStackLayout x:Name="OnceFields" IsVisible="False" Spacing="8">
+                <Label Text="日期" FontAttributes="Bold" />
+                <DatePicker x:Name="OnceDatePicker" />
+                <Label Text="时间" FontAttributes="Bold" />
+                <TimePicker x:Name="OnceTimePicker" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout x:Name="AnnualFields" IsVisible="False" Spacing="8">
+                <Label Text="月份和日期" FontAttributes="Bold" />
+                <DatePicker x:Name="AnnualDatePicker" />
+                <Label Text="时间" FontAttributes="Bold" />
+                <TimePicker x:Name="AnnualTimePicker" />
+                <Label
+                    Text="这里只使用月和日，年份会自动滚动到下一年。"
+                    FontSize="12"
+                    TextColor="#777" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout x:Name="CronFields" IsVisible="False" Spacing="8">
+                <Label Text="重复频率" FontAttributes="Bold" />
+                <Picker
+                    x:Name="CronModePicker"
+                    Title="选择重复频率"
+                    SelectedIndexChanged="OnCronModeChanged" />
+                <Label x:Name="CronModeHint" FontSize="12" TextColor="#777" />
+
+                <VerticalStackLayout x:Name="IntervalFields" IsVisible="False" Spacing="6">
+                    <Label Text="间隔数值" FontAttributes="Bold" />
+                    <Entry
+                        x:Name="IntervalValueEntry"
+                        Keyboard="Numeric"
+                        Placeholder="例如 10" />
+                    <Label Text="间隔单位" FontAttributes="Bold" />
+                    <Picker
+                        x:Name="IntervalUnitPicker"
+                        Title="选择单位" />
+                </VerticalStackLayout>
+
+                <Label Text="时间" FontAttributes="Bold" />
+                <TimePicker x:Name="CronTimePicker" />
+
+                <VerticalStackLayout x:Name="CronWeekFields" IsVisible="False" Spacing="6">
+                    <Label Text="星期" FontAttributes="Bold" />
+                    <Picker x:Name="CronWeekdayPicker" Title="选择星期" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout x:Name="CronMonthFields" IsVisible="False" Spacing="6">
+                    <Label Text="每月日期" FontAttributes="Bold" />
+                    <Entry
+                        x:Name="CronMonthDayEntry"
+                        Keyboard="Numeric"
+                        Placeholder="1 到 31" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <Label x:Name="SchedulePreview" Text="" FontSize="12" TextColor="#555" />
+
+            <Label Text="提前提醒" FontAttributes="Bold" />
+            <Label
+                Text="可以添加多个提前提醒，例如提前 3 天和目标当天各提醒一次。"
+                FontSize="12"
+                TextColor="#777" />
+            <VerticalStackLayout
+                x:Name="OffsetsContainer"
+                Spacing="8">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*,100,Auto" ColumnSpacing="8">
+                            <Entry
+                                Grid.Column="0"
+                                Keyboard="Numeric"
+                                Text="{Binding Value, Mode=TwoWay}" />
+                            <Picker
+                                Grid.Column="1"
+                                ItemsSource="{Binding Units}"
+                                SelectedItem="{Binding Unit, Mode=TwoWay}" />
+                            <Button
+                                Grid.Column="2"
+                                Text="删除"
+                                FontSize="12"
+                                Padding="8,6"
+                                BackgroundColor="#E53935"
+                                Clicked="OnRemoveOffset"
+                                CommandParameter="{Binding .}" />
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+            <Button
+                Text="+ 添加提前提醒"
+                FontSize="13"
+                BackgroundColor="#26A69A"
+                Clicked="OnAddOffset" />
+
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <Label
+                    Grid.Column="0"
+                    Text="启用任务"
+                    FontAttributes="Bold"
+                    VerticalOptions="Center" />
+                <Switch x:Name="EnabledSwitch" Grid.Column="1" IsToggled="True" />
+            </Grid>
+
+            <Label x:Name="StatusLabel" Text="" TextColor="#C62828" />
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button
+                    Text="保存"
+                    Grid.Column="0"
+                    BackgroundColor="#00796B"
+                    TextColor="White"
+                    Clicked="OnSave" />
+                <Button
+                    Text="取消"
+                    Grid.Column="1"
+                    Clicked="OnCancel" />
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

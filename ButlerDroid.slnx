@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/tests/">
+    <Project Path="tests/ButlerDroid.Core.Tests/ButlerDroid.Core.Tests.csproj" />
+  </Folder>
+  <Project Path="ButlerDroid.Core/ButlerDroid.Core.csproj" />
+  <Project Path="ButlerDroid/ButlerDroid.csproj" />
+</Solution>

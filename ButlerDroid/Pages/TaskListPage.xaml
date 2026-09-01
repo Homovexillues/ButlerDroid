@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ButlerDroid.Pages.TaskListPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:ButlerDroid.Core.Models;assembly=ButlerDroid.Core"
+    Title="提醒任务"
+    BackgroundColor="#F6F7F9">
+
+    <Grid RowDefinitions="Auto,*" Padding="16,16,16,8" RowSpacing="12">
+        <Button
+            Grid.Row="0"
+            Text="新建提醒"
+            BackgroundColor="#00796B"
+            TextColor="White"
+            Clicked="OnNewTask" />
+
+        <CollectionView
+            x:Name="TasksView"
+            Grid.Row="1"
+            SelectionMode="None">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout
+                    Padding="0,40"
+                    Spacing="8"
+                    HorizontalOptions="Center">
+                    <Label
+                        Text="还没有提醒任务"
+                        FontSize="18"
+                        HorizontalOptions="Center" />
+                    <Label
+                        Text="点击上方按钮添加一个本地定时提醒。"
+                        TextColor="#777"
+                        FontSize="13"
+                        HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ScheduledTask">
+                    <Border
+                        Margin="0,0,0,10"
+                        Padding="14"
+                        Stroke="#E4E7EB"
+                        StrokeThickness="1"
+                        BackgroundColor="White">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10" />
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <VerticalStackLayout Spacing="4">
+                                <Label
+                                    Text="{Binding Title}"
+                                    FontAttributes="Bold"
+                                    FontSize="16"
+                                    TextColor="#263238" />
+                                <Label
+                                    Text="{Binding ScheduleSummary}"
+                                    TextColor="#607D8B"
+                                    FontSize="13" />
+                                <Label
+                                    Text="{Binding NextFireText}"
+                                    TextColor="#00796B"
+                                    FontSize="13" />
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="6" WidthRequest="74">
+                                <Button
+                                    Text="编辑"
+                                    FontSize="12"
+                                    HeightRequest="34"
+                                    Padding="0"
+                                    Clicked="OnEditTask"
+                                    CommandParameter="{Binding .}" />
+                                <Button
+                                    Text="测试"
+                                    FontSize="12"
+                                    HeightRequest="34"
+                                    Padding="0"
+                                    Clicked="OnTestTask"
+                                    CommandParameter="{Binding .}" />
+                                <Switch
+                                    IsToggled="{Binding IsEnabled}"
+                                    HorizontalOptions="Center"
+                                    Toggled="OnTaskEnabledToggled" />
+                                <Button
+                                    Text="删除"
+                                    FontSize="12"
+                                    HeightRequest="34"
+                                    Padding="0"
+                                    TextColor="#C62828"
+                                    BackgroundColor="Transparent"
+                                    Clicked="OnDeleteTask"
+                                    CommandParameter="{Binding .}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
