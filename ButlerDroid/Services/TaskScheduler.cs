@@ -73,6 +73,7 @@ public static class TaskScheduler
 			return;
 
 		LocalNotificationService.Show(task.Title, task.Body);
+		ForegroundAlertService.Show(task.Title, task.Body);
 		await SpeechService.PlayPreparedAsync(task.Id, task.Title, task.Body);
 
 		if (markFired)

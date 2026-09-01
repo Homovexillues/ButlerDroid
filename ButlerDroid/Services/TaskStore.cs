@@ -9,8 +9,7 @@ public static class TaskStore
 	{
 		await Database.InitializeAsync();
 		return await Database.Connection.Table<ScheduledTask>()
-			.OrderByDescending(t => t.IsEnabled)
-			.ThenByDescending(t => t.UpdatedAtUnixMs)
+			.OrderBy(t => t.Id)
 			.ToListAsync();
 	}
 
@@ -20,11 +19,24 @@ public static class TaskStore
 		return await Database.Connection.FindAsync<ScheduledTask>(id);
 	}
 
+	public static async Task<ScheduledTask?> GetByKeyAsync(string taskKey)
+	{
+		await Database.InitializeAsync();
+		if (string.IsNullOrWhiteSpace(taskKey))
+			return null;
+
+		return await Database.Connection.Table<ScheduledTask>()
+			.Where(t => t.TaskKey == taskKey)
+			.FirstOrDefaultAsync();
+	}
+
 	public static async Task<int> SaveAsync(ScheduledTask task)
 	{
 		await Database.InitializeAsync();
 		var now = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 		task.UpdatedAtUnixMs = now;
+		if (string.IsNullOrWhiteSpace(task.TaskKey))
+			task.TaskKey = Guid.NewGuid().ToString("N");
 
 		if (task.Id == 0)
 		{

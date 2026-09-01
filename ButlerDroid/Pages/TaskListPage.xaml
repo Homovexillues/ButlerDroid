@@ -8,17 +8,32 @@
     BackgroundColor="#F6F7F9">
 
     <Grid RowDefinitions="Auto,*" Padding="16,16,16,8" RowSpacing="12">
-        <Button
-            Grid.Row="0"
-            Text="新建提醒"
-            BackgroundColor="#00796B"
-            TextColor="White"
-            Clicked="OnNewTask" />
+        <Grid Grid.Row="0" ColumnDefinitions="*,*,*" ColumnSpacing="8">
+            <Button
+                Grid.Column="0"
+                Text="新建"
+                BackgroundColor="#00796B"
+                TextColor="White"
+                Clicked="OnNewTask" />
+            <Button
+                Grid.Column="1"
+                Text="导入"
+                BackgroundColor="#26A69A"
+                TextColor="White"
+                Clicked="OnImportTasks" />
+            <Button
+                Grid.Column="2"
+                Text="导出"
+                BackgroundColor="#00695C"
+                TextColor="White"
+                Clicked="OnExportTasks" />
+        </Grid>
 
         <CollectionView
             x:Name="TasksView"
             Grid.Row="1"
-            SelectionMode="None">
+            SelectionMode="None"
+            ItemsUpdatingScrollMode="KeepScrollOffset">
             <CollectionView.EmptyView>
                 <VerticalStackLayout
                     Padding="0,40"
@@ -29,7 +44,7 @@
                         FontSize="18"
                         HorizontalOptions="Center" />
                     <Label
-                        Text="点击上方按钮添加一个本地定时提醒。"
+                        Text="点击上方按钮添加、导入或导出任务。"
                         TextColor="#777"
                         FontSize="13"
                         HorizontalOptions="Center" />

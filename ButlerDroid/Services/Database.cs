@@ -19,6 +19,7 @@ public static class Database
 		_connection = new SQLiteAsyncConnection(path);
 		await _connection.CreateTableAsync<ButlerDroid.Core.Models.ScheduledTask>();
 		await EnsureIntervalColumnsAsync();
+		await EnsureTaskKeyColumnAsync();
 	}
 
 	private static async Task EnsureIntervalColumnsAsync()
@@ -26,16 +27,32 @@ public static class Database
 		const string intervalColumn = "IntervalSeconds";
 		const string anchorColumn = "AnchorAtUnixMs";
 
-		await TryAddColumnAsync(intervalColumn);
-		await TryAddColumnAsync(anchorColumn);
+		await TryAddColumnAsync(intervalColumn, "INTEGER NOT NULL DEFAULT 0");
+		await TryAddColumnAsync(anchorColumn, "INTEGER NOT NULL DEFAULT 0");
 	}
 
-	private static async Task TryAddColumnAsync(string columnName)
+	private static async Task EnsureTaskKeyColumnAsync()
+	{
+		await TryAddColumnAsync("TaskKey", "TEXT NULL");
+		await Connection.ExecuteAsync(
+			"UPDATE ScheduledTask SET TaskKey = '' WHERE TaskKey IS NULL");
+
+		var tasks = await Connection.QueryAsync<ButlerDroid.Core.Models.ScheduledTask>(
+			"SELECT * FROM ScheduledTask WHERE TaskKey IS NULL OR TaskKey = ''");
+
+		foreach (var task in tasks)
+		{
+			task.TaskKey = Guid.NewGuid().ToString("N");
+			await Connection.UpdateAsync(task);
+		}
+	}
+
+	private static async Task TryAddColumnAsync(string columnName, string definition)
 	{
 		try
 		{
 			await Connection.ExecuteAsync(
-				$"ALTER TABLE ScheduledTask ADD COLUMN {columnName} INTEGER NOT NULL DEFAULT 0");
+				$"ALTER TABLE ScheduledTask ADD COLUMN {columnName} {definition}");
 		}
 		catch (SQLiteException)
 		{

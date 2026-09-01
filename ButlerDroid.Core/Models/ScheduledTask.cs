@@ -17,6 +17,9 @@ public sealed class ScheduledTask
 	[PrimaryKey, AutoIncrement]
 	public int Id { get; set; }
 
+	[Indexed]
+	public string TaskKey { get; set; } = "";
+
 	[NotNull]
 	public string Title { get; set; } = "";
 
